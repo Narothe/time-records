@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ewidencja Godzin — Generator PDF</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Ewidencja godzin — Generator PDF</h1>
+
+  <input type="file" id="fileInput" accept=".xlsx" onchange="loadExcel()" />
+
+  <div id="formContainer" style="display: none;">
+    <h2>Dane do uzupełnienia</h2>
+    <label>Imię i nazwisko: <input type="text" id="name" /></label><br />
+    <label>Data podpisania umowy (YYYY-MM-DD): <input type="date" id="contractDate" /></label><br />
+    <label>Rok rozliczenia: <input type="number" id="year" /></label><br />
+	<label>Miesiąc rozliczenia: <input type="text" id="month" placeholder="Nazwa miesiąca" /></label><br />
+
+	<h3>Godziny pracy:</h3>
+	<table id="hoursTable">
+	  <thead>
+		<tr>
+		  <th>Dzień</th>
+		  <th>Godziny</th>
+		</tr>
+	  </thead>
+	  <tbody></tbody>
+	</table>
+
+	<p id="totalHours" style="font-weight: bold;"></p>
+
+	<button onclick="generatePDF()">Generuj PDF</button>
+
+
+  <script src="xlsx.core.min.js"></script>
+  <script src="jsPDF.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
