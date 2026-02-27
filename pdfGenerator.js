@@ -34,7 +34,7 @@ function handleFile(e) {
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-            appData.name = `${rows[1][3] || ""} ${rows[1][4] || ""}`;
+            appData.name = `${rows[1][4] || ""} ${rows[1][3] || ""}`;
             appData.contractDate = parseExcelDate(rows[4][3]);
             appData.year = rows[8][3];
             appData.month = rows[8][4];
