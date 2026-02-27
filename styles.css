@@ -139,6 +139,30 @@ button:hover:not(:disabled) {
     text-align: center;
 }
 
+/* ===== ACTION ROW (PDF + TEMPLATE) ===== */
+
+.action-row {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+/* responsywność na małych ekranach */
+@media (max-width: 600px) {
+    .action-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-row button,
+    .action-row .download-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
 /* ===== DOWNLOAD TEMPLATE ===== */
 
 .template-download {

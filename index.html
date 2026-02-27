@@ -31,9 +31,19 @@
       </div>
 
       <div class="file-section">
+
         <input type="file" id="fileInput" accept=".xlsx">
-        <br><br>
-        <button id="generateBtn" disabled>Generuj PDF</button>
+
+        <div class="action-row">
+          <button id="generateBtn" disabled>Generuj PDF</button>
+
+          <a href="assets/wzor-ewidencji.xlsx"
+             download="wzor-ewidencji.xlsx"
+             class="download-btn">
+            Pobierz wzór pliku Excel
+          </a>
+        </div>
+
       </div>
 
       <div id="statusMessage" class="status"></div>
@@ -54,12 +64,6 @@
         </table>
 
         <p id="previewTotal"></p>
-      </div>
-
-      <div class="template-download">
-        <a href="assets/wzor-ewidencji.xlsx" download class="download-btn">
-          Pobierz wzór pliku Excel
-        </a>
       </div>
 
       <div class="footer-note">
