@@ -2,11 +2,16 @@
 <html lang="pl">
   <head>
     <meta charset="UTF-8">
-    <title>Ewidencja godzin – PDF</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 20px; }
-      button { margin-top: 10px; }
-    </style>
+
+    <title>Ewidencja godzin – Generator PDF online</title>
+
+    <meta name="description"
+          content="Generator ewidencji godzin w PDF na podstawie pliku Excel. Dane przetwarzane lokalnie w przeglądarce.">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
 
@@ -31,6 +36,8 @@
         <button id="generateBtn" disabled>Generuj PDF</button>
       </div>
 
+      <div id="statusMessage" class="status"></div>
+
       <div id="previewContainer" style="display:none;">
         <h3>Podgląd danych z pliku</h3>
 
@@ -47,6 +54,12 @@
         </table>
 
         <p id="previewTotal"></p>
+      </div>
+
+      <div class="template-download">
+        <a href="assets/wzor-ewidencji.xlsx" download class="download-btn">
+          Pobierz wzór pliku Excel
+        </a>
       </div>
 
       <div class="footer-note">

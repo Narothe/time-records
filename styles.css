@@ -138,3 +138,47 @@ button:hover:not(:disabled) {
     color: #718096;
     text-align: center;
 }
+
+/* ===== DOWNLOAD TEMPLATE ===== */
+
+.template-download {
+    margin-top: 15px;
+}
+
+.download-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #10b981;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.download-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+/* ===== STATUS MESSAGE ===== */
+
+.status {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+}
+
+.status.success {
+    background: #e6fffa;
+    color: #065f46;
+    border: 1px solid #34d399;
+}
+
+.status.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+}

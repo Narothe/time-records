@@ -6,6 +6,7 @@
 
 const fileInput = document.getElementById("fileInput");
 const generateBtn = document.getElementById("generateBtn");
+const statusMessage = document.getElementById("statusMessage");
 
 // global application data extracted from the Excel file
 window.appData = {};
@@ -17,29 +18,37 @@ generateBtn.addEventListener("click", generatePDF);
 // populate `appData` with name, contract date, month, year, daily hours and total
 function handleFile(e) {
     const file = e.target.files[0];
+
     if (!file) return;
+
+    if (!file.name.endsWith(".xlsx")) {
+        showStatus("Nieprawidłowy plik. Wybierz plik .xlsx", "error");
+        return;
+    }
 
     const reader = new FileReader();
 
     reader.onload = evt => {
-        const workbook = XLSX.read(evt.target.result, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        try {
+            const workbook = XLSX.read(evt.target.result, { type: "array" });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-        // extract fields from expected cells in the spreadsheet layout
-        appData.name = `${rows[1][3] || ""} ${rows[1][4] || ""}`;
-        appData.contractDate = parseExcelDate(rows[4][3]);
-        appData.year = rows[8][3];
-        appData.month = rows[8][4];
-        appData.hours = rows.slice(1, 32).map(r => formatExcelTime(r[1]));
-        appData.total = sumTimes(appData.hours);
+            appData.name = `${rows[1][3] || ""} ${rows[1][4] || ""}`;
+            appData.contractDate = parseExcelDate(rows[4][3]);
+            appData.year = rows[8][3];
+            appData.month = rows[8][4];
+            appData.hours = rows.slice(1, 32).map(r => formatExcelTime(r[1]));
+            appData.total = sumTimes(appData.hours);
 
-        // enable the Generate PDF button once data is loaded
-        generateBtn.disabled = false;
+            generateBtn.disabled = false;
 
-        // optionally show HTML preview if preview.js is present
-        if (typeof showTablePreview === "function") {
             showTablePreview();
+            showStatus("Plik został wczytany.", "success");
+
+        } catch (error) {
+            showStatus("Błąd podczas wczytywania pliku.", "error");
+            console.error(error);
         }
     };
 
@@ -270,4 +279,10 @@ function generatePDF() {
     pdfMake.createPdf(docDefinition).download(
         `ewidencja_${appData.name.replace(/\s+/g, "_")}.pdf`
     );
+}
+
+function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = "status " + type;
+    statusMessage.style.display = "block";
 }
