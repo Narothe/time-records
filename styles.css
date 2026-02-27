@@ -1,3 +1,9 @@
+/* styles.css
+   Main stylesheet for the time-records web UI. Provides
+   layout, preview table styling and button states for the single-page app used
+   to load an Excel file and generate a PDF.
+*/
+
 /* ===== GLOBAL ===== */
 
 * {

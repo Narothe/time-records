@@ -10,6 +10,12 @@
   </head>
   <body>
 
+    <!-- index.html
+         Simple single-page UI to load an Excel (.xlsx) file,
+         preview extracted daily working hours and generate a PDF report using
+         the bundled scripts. The UI text is in Polish to match the form.
+    -->
+
     <link rel="stylesheet" href="styles.css">
 
     <div class="container">
@@ -49,11 +55,12 @@
 
     </div>
 
-    <!-- LIBRARIES -->
+    <!-- LIBRARIES: external dependencies used by the scripts below -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/pdfmake.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/vfs_fonts.js"></script>
 
+    <!-- Application scripts: parse Excel, create preview and generate PDF -->
     <script src="pdfGenerator.js"></script>
     <script src="preview.js"></script>
   </body>

@@ -1,11 +1,20 @@
+// pdfGenerator.js
+// Reads an Excel (.xlsx) file, extracts relevant fields from
+// a predefined layout, converts Excel time values to h:mm, calculates totals,
+// shows a preview (via showTablePreview) and generates a formatted PDF using
+// pdfMake.
+
 const fileInput = document.getElementById("fileInput");
 const generateBtn = document.getElementById("generateBtn");
 
+// global application data extracted from the Excel file
 window.appData = {};
 
 fileInput.addEventListener("change", handleFile);
 generateBtn.addEventListener("click", generatePDF);
 
+// handleFile: read the selected .xlsx file, parse the first sheet and
+// populate `appData` with name, contract date, month, year, daily hours and total
 function handleFile(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -17,6 +26,7 @@ function handleFile(e) {
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
+        // extract fields from expected cells in the spreadsheet layout
         appData.name = `${rows[1][3] || ""} ${rows[1][4] || ""}`;
         appData.contractDate = parseExcelDate(rows[4][3]);
         appData.year = rows[8][3];
@@ -24,8 +34,10 @@ function handleFile(e) {
         appData.hours = rows.slice(1, 32).map(r => formatExcelTime(r[1]));
         appData.total = sumTimes(appData.hours);
 
+        // enable the Generate PDF button once data is loaded
         generateBtn.disabled = false;
 
+        // optionally show HTML preview if preview.js is present
         if (typeof showTablePreview === "function") {
             showTablePreview();
         }
@@ -34,6 +46,7 @@ function handleFile(e) {
     reader.readAsArrayBuffer(file);
 }
 
+// parseExcelDate: convert Excel numeric date codes to DD-MM-YYYY string
 function parseExcelDate(v) {
     if (typeof v === "number") {
         const d = XLSX.SSF.parse_date_code(v);
@@ -42,10 +55,13 @@ function parseExcelDate(v) {
     return v || "";
 }
 
+// twoDigits: helper for zero-padding numbers to 2 digits
 function twoDigits(value) {
     return String(value).padStart(2, "0");
 }
 
+// formatExcelTime: Excel may store time as a fraction of a day (number) or as text.
+// Convert numeric times to "H:MM" string, leave text as-is.
 function formatExcelTime(value) {
     if (!value) return "";
 
@@ -61,6 +77,8 @@ function formatExcelTime(value) {
     return value;
 }
 
+// sumTimes: accumulate an array of time strings in H:MM format and return the
+// total as an H:MM string
 function sumTimes(timeArray) {
     let totalMinutes = 0;
 
@@ -80,6 +98,9 @@ function sumTimes(timeArray) {
     return `${hours}:${String(minutes).padStart(2, "0")}`;
 }
 
+// generatePDF: build a pdfMake document definition using data from appData and
+// trigger a download of the generated PDF. The table layout matches the
+// official form used for time records.
 function generatePDF() {
 
     const rowMargin = [0, 3, 0, 3];
@@ -125,6 +146,7 @@ function generatePDF() {
         ]
     ];
 
+    // add a row per day with hours and empty signature/notes cells
     appData.hours.forEach((h, i) => {
         tableBody.push([
             { text: i + 1, alignment: "center", margin: rowMargin },
@@ -135,6 +157,7 @@ function generatePDF() {
         ]);
     });
 
+    // final summary row with total hours
     tableBody.push([
         {
             text:
@@ -243,6 +266,7 @@ function generatePDF() {
         },
     };
 
+    // trigger PDF download using pdfMake
     pdfMake.createPdf(docDefinition).download(
         `ewidencja_${appData.name.replace(/\s+/g, "_")}.pdf`
     );
