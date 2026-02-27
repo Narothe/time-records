@@ -1,27 +1,60 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8">
-  <title>Ewidencja godzin – PDF</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    button { margin-top: 10px; }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ewidencja godzin – PDF</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      button { margin-top: 10px; }
+    </style>
+  </head>
+  <body>
 
-<h2>Ewidencja godzin – generator PDF</h2>
+    <link rel="stylesheet" href="styles.css">
 
-<input type="file" id="fileInput" accept=".xlsx">
+    <div class="container">
 
-<br><br>
-<button id="generateBtn" disabled>Generuj PDF</button>
+      <h1>Ewidencja godzin</h1>
+      <div class="subtitle">
+        Generator dokumentu PDF na podstawie pliku Excel
+      </div>
 
-<!-- LIBRARIES -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/pdfmake.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/vfs_fonts.js"></script>
+      <div class="file-section">
+        <input type="file" id="fileInput" accept=".xlsx">
+        <br><br>
+        <button id="generateBtn" disabled>Generuj PDF</button>
+      </div>
 
-<script src="app.js"></script>
-</body>
+      <div id="previewContainer" style="display:none;">
+        <h3>Podgląd danych z pliku</h3>
+
+        <div id="previewInfo"></div>
+
+        <table id="previewTable">
+          <thead>
+          <tr>
+            <th>Dzień miesiąca</th>
+            <th>Liczba godzin (h:mm)</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <p id="previewTotal"></p>
+      </div>
+
+      <div class="footer-note">
+        Projekt dostępny na GitHub: <a href="https://github.com/Narothe/time-records" target="_blank" rel="noopener noreferrer">https://github.com/Narothe/time-records</a>
+      </div>
+
+    </div>
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/pdfmake.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/vfs_fonts.js"></script>
+
+    <script src="pdfGenerator.js"></script>
+    <script src="preview.js"></script>
+  </body>
 </html>

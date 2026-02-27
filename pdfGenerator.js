@@ -1,7 +1,7 @@
 const fileInput = document.getElementById("fileInput");
 const generateBtn = document.getElementById("generateBtn");
 
-let data = {};
+window.appData = {};
 
 fileInput.addEventListener("change", handleFile);
 generateBtn.addEventListener("click", generatePDF);
@@ -17,14 +17,18 @@ function handleFile(e) {
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-        data.name = `${rows[1][3] || ""} ${rows[1][4] || ""}`;
-        data.contractDate = parseExcelDate(rows[4][3]);
-        data.year = rows[7][3];
-        data.month = rows[7][4];
-        data.hours = rows.slice(1, 32).map(r => r[1] || "");
-        data.total = rows[32][1] || 0;
+        appData.name = `${rows[1][3] || ""} ${rows[1][4] || ""}`;
+        appData.contractDate = parseExcelDate(rows[4][3]);
+        appData.year = rows[8][3];
+        appData.month = rows[8][4];
+        appData.hours = rows.slice(1, 32).map(r => formatExcelTime(r[1]));
+        appData.total = sumTimes(appData.hours);
 
         generateBtn.disabled = false;
+
+        if (typeof showTablePreview === "function") {
+            showTablePreview();
+        }
     };
 
     reader.readAsArrayBuffer(file);
@@ -42,9 +46,43 @@ function twoDigits(value) {
     return String(value).padStart(2, "0");
 }
 
+function formatExcelTime(value) {
+    if (!value) return "";
+
+    // if Excel saves it as a number (fraction of a day)
+    if (typeof value === "number") {
+        const totalMinutes = Math.round(value * 24 * 60);
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return `${hours}:${String(minutes).padStart(2, "0")}`;
+    }
+
+    // if it is already text, e.g., “8:30”
+    return value;
+}
+
+function sumTimes(timeArray) {
+    let totalMinutes = 0;
+
+    timeArray.forEach(time => {
+        if (!time) return;
+
+        const parts = time.split(":");
+        const h = parseInt(parts[0]) || 0;
+        const m = parseInt(parts[1]) || 0;
+
+        totalMinutes += h * 60 + m;
+    });
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours}:${String(minutes).padStart(2, "0")}`;
+}
+
 function generatePDF() {
 
-    const rowMargin = [0, 3, 0, 3];   // 🔴 TU REGULUJESZ WYSOKOŚĆ WIERSZA
+    const rowMargin = [0, 3, 0, 3];
     const lastRowMargin = [0, 6, 0, 6];
 
     const tableBody = [
@@ -87,7 +125,7 @@ function generatePDF() {
         ]
     ];
 
-    data.hours.forEach((h, i) => {
+    appData.hours.forEach((h, i) => {
         tableBody.push([
             { text: i + 1, alignment: "center", margin: rowMargin },
             { text: h || "", alignment: "center", margin: rowMargin },
@@ -110,7 +148,7 @@ function generatePDF() {
             alignment: "center",
             margin: lastRowMargin
         },
-        { text: data.total, bold: true, fontSize: 11, alignment: "center", margin: lastRowMargin },
+        { text: appData.total, bold: true, fontSize: 11, alignment: "center", margin: lastRowMargin },
         { text: "", alignment: "center", margin: lastRowMargin },
         { text: "", alignment: "center", margin: lastRowMargin },
         { text: "", alignment: "center", margin: lastRowMargin }
@@ -140,31 +178,31 @@ function generatePDF() {
                 margin: [0, 0, 0, 3]
             },
 
-            // 🔴 DATA PODPISANIA (pogrubiona wartość)
+            // DATE OF SIGNATURE
             {
                 alignment: "center",
                 margin: [0, 0, 0, 15],
                 text: [
-                    { text: data.contractDate, bold: true },
+                    { text: appData.contractDate, bold: true },
                     { text: " r." }
                 ]
             },
 
-            // 🔴 MIESIĄC I ROK (pogrubione wartości)
+            // MONTH AND YEAR
             {
                 margin: [0, 0, 0, 4],
                 text: [
                     { text: "Miesiąc: " },
-                    { text: `${twoDigits(data.month)} ${data.year}`, bold: true }
+                    { text: `${twoDigits(appData.month)} ${appData.year}`, bold: true }
                 ]
             },
 
-            // 🔴 NAZWISKO (pogrubione)
+            // LAST NAME
             {
                 margin: [0, 0, 0, 10],
                 text: [
                     { text: "Nazwisko i imię zleceniobiorcy: " },
-                    { text: data.name, bold: true }
+                    { text: appData.name, bold: true }
                 ]
             },
 
@@ -194,10 +232,10 @@ function generatePDF() {
                 margin: [40, 0, 40, 0],
                 columns: [
                     {
-                        text: "Projekt dostępny na GitHub: https://github.com/TWOJ_LOGIN/TWOJE_REPO",
+                        text: "Projekt dostępny na GitHub: https://github.com/Narothe/time-records",
                         alignment: "center",
                         fontSize: 8,
-                        link: "https://github.com/TWOJ_LOGIN/TWOJE_REPO",
+                        link: "https://github.com/Narothe/time-records",
                         color: "grey"
                     }
                 ]
@@ -206,6 +244,6 @@ function generatePDF() {
     };
 
     pdfMake.createPdf(docDefinition).download(
-        `ewidencja_${data.name.replace(/\s+/g, "_")}.pdf`
+        `ewidencja_${appData.name.replace(/\s+/g, "_")}.pdf`
     );
 }
