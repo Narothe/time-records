@@ -57,7 +57,7 @@ The file must contain:
 ### 3️⃣ Upload the File
 
 Click:
-> “Choose file”
+> “Wybierz plik”
 
 After successful import:
 
@@ -70,7 +70,7 @@ After successful import:
 ### 4️⃣ Generate the PDF
 
 Click:
-> “Generate PDF”
+> “Generuj PDF”
 
 A formatted A4 PDF document will be downloaded automatically.
 
@@ -118,7 +118,7 @@ You can run the project locally:
 1. Clone the repository:
 
 
-`git clone`https://github.com/Narothe/time-records.git`
+`git clone https://github.com/Narothe/time-records.git`
 
 
 2. Open:
